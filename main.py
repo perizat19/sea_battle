@@ -214,3 +214,52 @@ class Game:
         while board is None:
             board = self.try_gen_board()
         return board
+
+    @staticmethod
+    def greet():
+        print('-------------------')
+        print('  Welcome  ')
+        print('    to     ')
+        print('sea battle ')
+        print('-------------------')
+        print(' input format: x y ')
+        print(' x - row number    ')
+        print(' y - column number ')
+        print('-------------------')
+
+    def print_boards(self):  
+        print('-' * self.size * 10)
+        print('Your field:'.ljust((self.size + 1) * 4 - 1) + ' ' * self.size + 'Computer field:')
+        for s1, s2 in zip(self.pl.board.__str__().split('\n'), self.ai.board.__str__().split('\n')):
+            print(s1 + ' ' * self.size + s2)
+
+    def loop(self):
+        step = 0
+        while True:
+            self.print_boards()
+            if step % 2 == 0:
+                print('Your turn!')
+                repeat = self.pl.move()
+            else:
+                print("Computer's turn!")
+                repeat = self.ai.move()
+            if repeat:
+                step -= 1
+
+            if self.ai.board.defeat():
+                self.print_boards()
+                print('You won!')
+                break
+            if self.pl.board.defeat():
+                self.print_boards()
+                print('Computer won!')
+                break
+            step += 1
+
+    def start(self):
+        self.greet()
+        self.loop()
+
+
+g = Game()
+g.start()
