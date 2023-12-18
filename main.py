@@ -128,3 +128,21 @@ class Board:
 
     def defeat(self):
         return self.count_destr_ships == len(self.ships)
+
+class Player:
+    def __init__(self, board: Board, enemy: Board):
+        self.board = board
+        self.enemy = enemy
+
+    def ask(self):
+        raise NotImplementedError()
+
+    def move(self) -> bool:   
+        while True:
+            try:
+                target = self.ask()
+                repeat = self.enemy.shot(target)
+                sleep(1)
+                return repeat
+            except BoardException as excep:
+                print(excep)
