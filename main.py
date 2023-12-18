@@ -201,3 +201,11 @@ class Game:
                 attempts += 1
                 if attempts > 2000:
                     return None
+                ship = Ship(Dot(randint(0, self.size), (randint(0, self.size))), l, bool(randint(0, 1)))
+                try:
+                    board.add_ship(ship)
+                    break
+                except BoardWrongShipException:
+                    pass
+        board.begin()
+        return board
