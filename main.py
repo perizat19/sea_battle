@@ -209,3 +209,8 @@ class Game:
                     pass
         board.begin()
         return board
+    def random_board(self):
+        board = None
+        while board is None:
+            board = self.try_gen_board()
+        return board
