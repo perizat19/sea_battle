@@ -54,3 +54,50 @@ class Ship:
 
     def is_hit(self, dot) -> bool:
         return dot in self.dots
+
+class Board:
+    def __init__(self, size: int, hid=False):
+        self.size = size
+        self.hid = hid
+        self.field = [['O'] * size for _ in range(size)]
+        self.busy = []
+        self.ships = []
+        self.last_hit = []      
+        self.count_destr_ships = 0      
+
+    def __str__(self):
+        res = '  | ' + ' | '.join(map(str, range(1, self.size + 1))) + ' |'
+        for i, row in enumerate(self.field):
+            res += f'\n{i + 1} | ' + ' | '.join(row) + ' |'
+        if self.hid:
+            res = res.replace('■', 'O')
+        return res
+
+    def out(self, d: Dot) -> bool:
+        return not (0 <= d.x < self.size and 0 <= d.y < self.size)
+
+    def contour(self, ship, visible=False):
+        around = [(i, j) for i in range(-1, 2) for j in range(-1, 2)]
+        for dot in ship.dots:
+            for dx, dy in around:
+                curr_dot = Dot(dot.x + dx, dot.y + dy)
+                if not self.out(curr_dot) and curr_dot not in self.busy:
+                    if visible:      
+                        self.field[curr_dot.x][curr_dot.y] = '.'
+                    self.busy.append(curr_dot)
+
+    def add_ship(self, ship):
+        for d in ship.dots:
+            if d in self.busy or self.out(d):
+                raise BoardWrongShipException()
+        for d in ship.dots:
+            self.field[d.x][d.y] = '■'
+            self.busy.append(d)
+        self.ships.append(ship)
+        self.contour(ship)
+
+    def shot(self, d: Dot) -> bool:    
+        if d in self.busy:
+            raise BoardUsedException()
+        if self.out(d):
+            raise BoardOutException()
