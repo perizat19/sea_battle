@@ -168,3 +168,16 @@ class AI(Player):
         sleep(0.1 * randint(15, 50))   
         print(f"Computer's step: {d.x + 1} {d.y + 1}")
         return d
+
+class User(Player):
+    def ask(self) -> Dot:
+        while True:
+            coords = input('Enter shoot coordinates:\t').split()
+            if len(coords) != 2:
+                print('Enter 2 coordinates')
+                continue
+            x, y = coords
+            if not all((x.isdigit(), y.isdigit())):
+                print('Coordinates must be numbes')
+                continue
+            return Dot(int(x) - 1, int(y) - 1)
