@@ -192,3 +192,12 @@ class Game:
 
         self.ai = AI(ai_board, user_board)
         self.pl = User(user_board, ai_board)
+
+    def try_gen_board(self):
+        attempts = 0
+        board = Board(size=self.size)
+        for l in self.lens:
+            while True:
+                attempts += 1
+                if attempts > 2000:
+                    return None
