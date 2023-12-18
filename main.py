@@ -101,3 +101,30 @@ class Board:
             raise BoardUsedException()
         if self.out(d):
             raise BoardOutException()
+        self.busy.append(d)
+
+        for ship in self.ships:
+            if ship.is_hit(d):
+                self.field[d.x][d.y] = 'X'
+                print('Hitted!')
+                ship.lives -= 1
+                if ship.lives == 0:
+                    self.count_destr_ships += 1
+                    self.contour(ship, visible=True)
+                    print('Sunk!')
+                    self.last_hit = []
+                    return False
+                else:
+                    print('Hitted!')
+                    self.last_hit.append(d)
+                    return True
+
+        self.field[d.x][d.y] = '.'
+        print('Miss!')
+        return False
+
+    def begin(self):
+        self.busy = []
+
+    def defeat(self):
+        return self.count_destr_ships == len(self.ships)
