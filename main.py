@@ -146,3 +146,25 @@ class Player:
                 return repeat
             except BoardException as excep:
                 print(excep)
+
+class AI(Player):
+    def ask(self) -> Dot:
+        last = self.enemy.last_hit
+        while True:
+            if last:    
+                if len(last) == 1:
+                    near = ((0, 1), (0, -1), (1, 0), (-1, 0))
+                else:
+                    if last[0].x == last[-1].x:
+                        near = ((0, 1), (0, -1))
+                    else:
+                        near = ((1, 0), (-1, 0))
+                dx, dy = choice(near)
+                d = choice((Dot(last[-1].x + dx, last[-1].y + dy), Dot(last[0].x + dx, last[0].y + dy)))
+            else:
+                d = Dot(randint(0, 5), randint(0, 5))
+            if d not in self.enemy.busy and not self.enemy.out(d):
+                break
+        sleep(0.1 * randint(15, 50))   
+        print(f"Computer's step: {d.x + 1} {d.y + 1}")
+        return d
