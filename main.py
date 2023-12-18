@@ -181,3 +181,14 @@ class User(Player):
                 print('Coordinates must be numbes')
                 continue
             return Dot(int(x) - 1, int(y) - 1)
+        
+class Game:
+    def __init__(self, size=6):
+        self.lens = (3, 2, 2, 1, 1, 1, 1)
+        self.size = size
+        ai_board = self.random_board()
+        user_board = self.random_board()
+        ai_board.hid = True
+
+        self.ai = AI(ai_board, user_board)
+        self.pl = User(user_board, ai_board)
